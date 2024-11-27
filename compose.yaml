@@ -1,0 +1,10 @@
+services:
+  postgis:
+    image: postgis/postgis:16-3.4
+    restart: always
+    environment:
+      POSTGRES_DB: antarctica
+      POSTGRES_USER: ant
+      POSTGRES_PASSWORD: antarcticapassword
+    ports:
+      - "5432:5432"
