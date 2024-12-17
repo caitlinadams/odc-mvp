@@ -1,0 +1,19 @@
+name: s1_compass_isce3_backscatter
+description: Sample CSLC backscatter from COMPASS-ISCE3
+metadata_type: eo3
+
+metadata:
+  product:
+    name: s1_compass_isce3_backscatter
+
+load:
+    crs: EPSG:32756
+    resolution:
+      x: 20.0
+      y: -20.0
+
+measurements:
+- name: backscatter
+  units: "1"
+  nodata: NaN
+  dtype: float32
