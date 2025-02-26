@@ -1,0 +1,48 @@
+services:
+  postgisservice:
+    image: postgis/postgis:16-3.4
+    restart: always
+    environment:
+      POSTGRES_DB: antarctica
+      POSTGRES_USER: ant
+      POSTGRES_PASSWORD: antarcticapassword
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "postgisservice", "-q", "-d", "$POSTGRES_DB", "-U", "$POSTGRES_USER"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+  owsservice:
+    build:
+      context: .
+      args:
+        PYDEV_DEBUG: "${PYDEV_DEBUG}"
+        ENVIRONMENT: test
+      cache_from:
+        - opendatacube/ows:_builder
+    image: opendatacube/ows:latest
+    environment:
+      LOCAL_UID: ${LOCAL_UID:-1000}
+      LOCAL_GID: ${LOCAL_GID:-1000}
+      # Hard coded for now.
+      ODC_ENVIRONMENT: default
+      ODC_DEFAULT_INDEX_DRIVER: postgis
+      ODC_DEFAULT_DB_URL: postgresql://ant:antarcticapassword@postgisservice:5432/antarctica
+      PYTHONPATH: /src/config
+      DATACUBE_OWS_CFG: minimal_ows_config.ows_cfg
+      FLASK_APP: /src/datacube_ows/ogc.py
+      FLASK_ENV: ${FLASK_ENV}
+    volumes:
+      - ./ows_src:/src
+      - ./ows_src/config:/src/config
+      - ./data:/src/data
+      - ./products:/src/products
+    restart: always
+    command: ["flask", "run", "--host=0.0.0.0", "--port=8000"]
+    ports:
+      - 8000:8000
+    depends_on:
+      postgisservice:
+        condition: service_healthy
+

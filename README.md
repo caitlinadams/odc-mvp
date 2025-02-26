@@ -89,7 +89,7 @@ python dataset_prepare_scripts/prepare_s1_compass_isce3_backscatter.py
 
 #### Add dataset document to ODC
 ```
-datacube dataset add odc-mvp/data/sentinel1/compass/isce3/OPERA_L2_RTC-S1A_IW_SLC__1SDV_20220106T191355_20220106T191422_041344_04EA48_E185_CSLC_BACKSCATTER_TRY-odc-metadata.yaml
+datacube dataset add data/sentinel1/compass/isce3/OPERA_L2_RTC-S1A_IW_SLC__1SDV_20220106T191355_20220106T191422_041344_04EA48_E185_CSLC_BACKSCATTER_TRY-odc-metadata.yaml
 ```
 
 ### Run notebook to check if product add and dataset add successful

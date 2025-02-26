@@ -1,7 +1,7 @@
 ---
 # Dataset
 $schema: https://schemas.opendatacube.org/dataset
-id: fb730f26-7c5f-421e-ba4c-29d451e70d89
+id: 61ff95f3-43ae-4f5c-bf2f-37b1a2cba38e
 
 label: s1_compass_isce3_backscatter_2022-10-06
 product:
@@ -27,13 +27,16 @@ grids:
 properties:
   datetime: 2022-10-06 19:14:22Z
   odc:file_format: GeoTIFF
-  odc:processing_datetime: 2025-01-24 02:46:32.195680Z
+  odc:processing_datetime: 2025-01-30 04:54:14.567670Z
   odc:product: s1_compass_isce3_backscatter
 
 measurements:
-  backscatter:
+  backscatter_db:
     path: 
-      OPERA_L2_RTC-S1A_IW_SLC__1SDV_20220106T191355_20220106T191422_041344_04EA48_E185_CSLC_BACKSCATTER_TRY.tif
+      OPERA_L2_RTC-S1A_IW_SLC__1SDV_20220106T191355_20220106T191422_041344_04EA48_E185_CSLC_BACKSCATTER_TRY_DB.tif
+  backscatter_linear:
+    path: 
+      OPERA_L2_RTC-S1A_IW_SLC__1SDV_20220106T191355_20220106T191422_041344_04EA48_E185_CSLC_BACKSCATTER_TRY_LINEAR.tif
 
 accessories: {}
 
