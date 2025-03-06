@@ -1,0 +1,23 @@
+name: s1_pyrosar_gamma_backscatter
+description: Sample RTC backscatter from PyroSAR+GAMMA
+metadata_type: eo3
+
+metadata:
+  product:
+    name: s1_pyrosar_gamma_backscatter
+
+load:
+    crs: EPSG:3031
+    resolution:
+      x: 40.0
+      y: -40.0
+
+measurements:
+- name: hh
+  units: "1"
+  nodata: -99
+  dtype: float32
+- name: hv
+  units: "1"
+  nodata: -99
+  dtype: float32

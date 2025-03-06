@@ -13,7 +13,11 @@ load:
       y: -20.0
 
 measurements:
-- name: backscatter
+- name: backscatter_linear
   units: "1"
-  nodata: NaN
+  nodata: "NaN"
+  dtype: float32
+- name: backscatter_db
+  units: "1"
+  nodata: -340282346638528859811704183484516925440
   dtype: float32
