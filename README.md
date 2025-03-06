@@ -1,70 +1,51 @@
 # MVP for Digital Earth Antarctica Open Data Cube
 
-## Clone repository and set up required repos
-```
-mkdir deant-mvp
-cd deant-mvp
-git clone https://github.com/caitlinadams/odc-mvp.git
-```
-### Set up required folders and other codebases
-```
-mkdir codebases
-cd codebases
-git clone https://github.com/opendatacube/datacube-core.git
-git clone https://github.com/opendatacube/eo-datasets.git
-cd ..
-```
-## Conda environment
-```
-cd odc-mvp
-micromamba create -f environment.yml
-micromamba activate deantmvp
-cd ../
-```
-### Install codebases
-#### Open Data Cube
-```
-cd codebases/datacube-core
-git checkout 1.9.0-rc11
-pip install --upgrade '.[test]'
-./check-code.sh
-cd ../
-```
-#### eo-datasets
-```
-cd eo-datasets
-git checkout integrate-1.9
-pip install .
-cd ../../odc-mvp
-```
+This repository contains code to set up a minimal working Open Data Cube with OWS capability. 
 
-## PostGIS Container
+## Simple launch with docker-compose
 
-This repository uses PostGIS as the database. 
-In a new terminal, run `docker compose up` from the `odc-mvp` directory to start the database.
+This repository contains a [docker-compose configuration file](compose.yml) that describes two services:
+* `postgis` which contains the postgis database
+* `ows` which contains the `datacube-core` and `datacube-ows` libraries
 
-## Open Data Cube
+The `ows` service is responsible for adding products and datasets to the database managed by the `postgis` service. 
+The `ows` service will also run the flask app for serving the webservices created by `datacube-ows`
 
-Create a local Open Data Cube (using the 1.9 release candidate)
+Data is indexed from a public AWS S3 bucket - there is no need to have credentials for AWS.
 
-### Update datacube conf file to point at postgis database
-```
-vim ~/.datacube.conf
-```
-Add the following:
-```
-[default]
-db_hostname:localhost
-db_database: antarctica
-index_driver: postgis
-db_username: ant
-db_password: antarcticapassword
-```
-These values are chosen to match the configuration for the PostGIS database that are contained in the `compose.yml` file.
+Follow the instructions below to run the services:
 
-### Initialise and check the system
-```
-datacube system init
-datacube system check
-```
+1. Clone this repository
+    ```
+    git clone https://github.com/caitlinadams/odc-mvp.git
+    ```
 
+1. Enter the repository directory and run docker compose:
+    ```
+    cd odc-mvp
+    docker compose up
+    ```
+1. One the OWS service reports that it is running on http://127.0.0.1:8000, view the WMS GetCapabilities page:
+    ```
+    http://localhost:8000/?service=wms&request=getcapabilities
+    ```
+1. To view in a service like Terria, add the above URL as a web data set. 
+1. When finished, shut down the services by running:
+    ```
+    docker compose down
+    ```
+
+## Data
+The data used in this demo are three SAR images over Antarctica. 
+The original data is EPSG:3031 (Antarctic Polar Sterographic).
+
+The three scenes are:
+* [S1A_EW_GRDM_1SDH_20210701T150428_20210701T150533_038585_048D91_23E6](https://deant-data-public-dev.s3.ap-southeast-2.amazonaws.com/index.html?prefix=experimental/pyrosar-ew-rtc/S1A_EW_GRDM_1SDH_20210701T150428_20210701T150533_038585_048D91_23E6/)
+* [S1A_EW_GRDM_1SDH_20210704T152833_20210704T152942_038629_048EE8_D41F](https://deant-data-public-dev.s3.ap-southeast-2.amazonaws.com/index.html?prefix=experimental/pyrosar-ew-rtc/S1A_EW_GRDM_1SDH_20210704T152833_20210704T152942_038629_048EE8_D41F/)
+* [S1A_EW_GRDM_1SDH_20210706T151222_20210706T151326_038658_048FD4_8688](https://deant-data-public-dev.s3.ap-southeast-2.amazonaws.com/index.html?prefix=experimental/pyrosar-ew-rtc/S1A_EW_GRDM_1SDH_20210704T152833_20210704T152942_038629_048EE8_D41F/)
+
+## What to expect
+
+Datasets should be located in East Antarctica.
+There are three time steps.
+![Expected WMS layer in Terria](./docs/_static/wms_expected.png)

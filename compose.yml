@@ -14,13 +14,6 @@ services:
       interval: 10s
       retries: 10
   ows:
-    # build:
-    #   context: .
-    #   args:
-    #     PYDEV_DEBUG: "${PYDEV_DEBUG}"
-    #     ENVIRONMENT: test
-    #   cache_from:
-    #     - opendatacube/ows:_builder
     image: opendatacube/ows:latest
     environment:
       LOCAL_UID: ${LOCAL_UID:-1000}
@@ -32,14 +25,15 @@ services:
       PYTHONPATH: /src/config
       DATACUBE_OWS_CFG: minimal_ows_config.ows_cfg
       FLASK_APP: /src/datacube_ows/ogc.py
-      FLASK_ENV: ${FLASK_ENV}
+      FLASK_ENV: ""
     volumes:
+      - ./indexing_script:/src/indexing
       - ./ows_src:/src
       - ./ows_src/config:/src/config
       - ./data:/src/data
       - ./products:/src/products
     restart: always
-    command: ["flask", "run", "--host=0.0.0.0", "--port=8000"]
+    command: ["/bin/sh", "-c", "/src/indexing/datacube_indexing.sh"]
     ports:
       - 8000:8000
     depends_on:

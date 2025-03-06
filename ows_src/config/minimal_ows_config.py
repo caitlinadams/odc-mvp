@@ -78,57 +78,5 @@ ows_cfg = {
                 }
             ],
         },
-        {
-            "title": "Australia",
-            "abstract": "DEA Australia Data",
-            "layers": [
-                {
-                    "title": "SAR Update Test",
-                    "abstract": "SAR data",
-                    "name": "sar_sample",
-                    "product_name": "s1_compass_isce3_backscatter",
-                    "native_crs": "EPSG:32756",
-                    "native_resolution": [20, -20],
-                    "bands": {"backscatter_linear": [], "backscatter_db": []},
-                    "resource_limits": {
-                        "zoomed_out_fill_colour": [150, 180, 200, 160],
-                        "min_zoom_level": 7,
-                        "max_datasets": 12,
-                    },
-                    "image_processing": {
-                        "extent_mask_func": "datacube_ows.ogc_utils.mask_by_val",
-                        "always_fetch_bands": [],
-                        "manual_merge": False,
-                    },
-                    "styling": {
-                        "default_style": "db",
-                        "styles": [
-                            {
-                                "name": "db",
-                                "title": "Backscatter - DB",
-                                "abstract": "Backscatter in decibels (10*log10(linear)",
-                                "components": {
-                                    "red": {"backscatter_db": 1},
-                                    "green": {"backscatter_db": 1},
-                                    "blue": {"backscatter_db": 1},
-                                },
-                                "scale_range": [-26, 26],
-                            },
-                            {
-                                "name": "linear",
-                                "title": "Backscatter - Linear",
-                                "abstract": "Linear backscatter",
-                                "components": {
-                                    "red": {"backscatter_linear": 1},
-                                    "green": {"backscatter_linear": 1},
-                                    "blue": {"backscatter_linear": 1},
-                                },
-                                "scale_range": [0.002, 2],
-                            },
-                        ],
-                    },
-                }
-            ],
-        },
     ],
 }
