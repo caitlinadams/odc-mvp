@@ -24,11 +24,10 @@ services:
       ODC_DEFAULT_DB_URL: postgresql://ant:antarcticapassword@postgis:5432/antarctica
       PYTHONPATH: /src/config
       DATACUBE_OWS_CFG: minimal_ows_config.ows_cfg
-      FLASK_APP: /src/datacube_ows/ogc.py
+      FLASK_APP: /usr/local/lib/python3.12/dist-packages/datacube_ows/ogc.py
       FLASK_ENV: ""
     volumes:
       - ./indexing_script:/src/indexing
-      - ./ows_src:/src
       - ./ows_src/config:/src/config
       - ./data:/src/data
       - ./products:/src/products
