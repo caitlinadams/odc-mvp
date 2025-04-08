@@ -15,9 +15,9 @@ load:
 measurements:
 - name: hh
   units: "1"
-  nodata: -99
+  nodata: "NaN"
   dtype: float32
 - name: hv
   units: "1"
-  nodata: -99
+  nodata: "NaN"
   dtype: float32
