@@ -45,7 +45,7 @@ services:
       FLASK_ENV: ""
     volumes:
       - ./scripts:/src/scripts
-      - ./ows_src/config:/src/config
+      - ./config:/src/config
     restart: always
     command: ["/bin/sh", "-c", "/src/scripts/datacube_ows_update_and_run_1p9.sh"]
     ports:
