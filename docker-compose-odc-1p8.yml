@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    restart: always
+    environment:
+      POSTGRES_DB: antarctica_1p8
+      POSTGRES_USER: ant_1p8
+      POSTGRES_PASSWORD: antarcticapassword_1p8
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "postgres", "-q", "-d", "$POSTGRES_DB", "-U", "$POSTGRES_USER"]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+  datacube-index:
+    image: opendatacube/datacube-index:0.3.6
+    environment:
+      DATACUBE_ENVIRONMENT: default
+      DATACUBE_DB_URL: postgresql://ant_1p8:antarcticapassword_1p8@postgres:5432/antarctica_1p8
+      AWS_DEFAULT_REGION: ap-southeast-2
+      AWS_NO_SIGN_REQUEST: yes
+    volumes:
+      - ../codebases/dea-config/:/src/dea-config
+      - ./scripts:/src/scripts
+    command: ["/bin/sh", "-c", "/src/scripts/datacube_1p8_indexing.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+  datacube-ows:
+    image: opendatacube/ows:1.8.42.post20_gaa67e0be
+    environment:
+      LOCAL_UID: ${LOCAL_UID:-1000}
+      LOCAL_GID: ${LOCAL_GID:-1000}
+      DATACUBE_ENVIRONMENT: default
+      DATACUBE_DB_URL: postgresql://ant_1p8:antarcticapassword_1p8@postgres:5432/antarctica_1p8
+      AWS_DEFAULT_REGION: ap-southeast-2
+      AWS_NO_SIGN_REQUEST: yes
+      PYTHONPATH: /src/config
+      FLASK_APP: /usr/local/lib/python3.12/dist-packages/datacube_ows/ogc.py
+      DATACUBE_OWS_CFG: minimal_ows_config.ows_cfg
+      FLASK_ENV: ""
+    volumes:
+      - ./scripts:/src/scripts
+      - ./ows_src/config:/src/config
+    restart: always
+    command: ["/bin/sh", "-c", "/src/scripts/datacube_ows_update_and_run_1p8.sh"]
+    ports:
+      - 8000:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      datacube-index:
+        condition: service_completed_successfully
