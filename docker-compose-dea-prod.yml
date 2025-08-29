@@ -48,7 +48,7 @@ services:
       AWS_DEFAULT_REGION: ap-southeast-2
       AWS_NO_SIGN_REQUEST: yes
       PYTHONPATH: /src/config
-      FLASK_APP: /usr/local/lib/python3.12/dist-packages/datacube_ows/ogc.py
+      FLASK_APP: /usr/local/lib/python3.10/dist-packages/datacube_ows/ogc.py
       DATACUBE_OWS_CFG: minimal_ows_config.ows_cfg
       FLASK_ENV: ""
     volumes:
