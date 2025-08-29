@@ -1,0 +1,86 @@
+# • Explorer: 2.12.4 (Docker Hub)
+# • OWS: 1.8.42 (Docker Hub)
+# • datacube-core: 1.8.19 (library inside services)
+# • Postgres: 16.6
+#  odc-apps-dc-tools (indexing): datacube-index:0.2.1
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    restart: always
+    environment:
+      POSTGRES_DB: deaprod
+      POSTGRES_USER: sar
+      POSTGRES_PASSWORD: deaprod_sar_password
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-h", "postgres", "-q", "-d", "$POSTGRES_DB", "-U", "$POSTGRES_USER"]
+      interval: 10s
+      timeout: 45s
+      retries: 10
+  datacube-index:
+    image: opendatacube/datacube-index:0.2.1
+    environment:
+      DATACUBE_ENVIRONMENT: default
+      DATACUBE_DB_URL: postgresql://sar:deaprod_sar_password@postgres:5432/deaprod
+      AWS_DEFAULT_REGION: ap-southeast-2
+      AWS_NO_SIGN_REQUEST: yes
+    volumes:
+      - ../codebases/dea-config/:/src/dea-config
+      - ./scripts/:/src/scripts
+    command: ["/bin/sh", "-c", "/src/scripts/deaprod_indexing.sh"]
+    healthcheck:
+      test: ["CMD", "datacube", "system", "check"]
+      interval: 10s
+      timeout: 45s
+      retries: 10
+    depends_on:
+      postgres:
+        condition: service_healthy
+  datacube-ows:
+    image: opendatacube/ows:1.8.42
+    environment:
+      LOCAL_UID: ${LOCAL_UID:-1000}
+      LOCAL_GID: ${LOCAL_GID:-1000}
+      DATACUBE_ENVIRONMENT: default
+      DATACUBE_DB_URL: postgresql://sar:deaprod_sar_password@postgres:5432/deaprod
+      AWS_DEFAULT_REGION: ap-southeast-2
+      AWS_NO_SIGN_REQUEST: yes
+      PYTHONPATH: /src/config
+      FLASK_APP: /usr/local/lib/python3.12/dist-packages/datacube_ows/ogc.py
+      DATACUBE_OWS_CFG: minimal_ows_config.ows_cfg
+      FLASK_ENV: ""
+    volumes:
+      - ./scripts:/src/scripts
+      - ./config:/src/config
+    restart: always
+    command: ["/bin/sh", "-c", "/src/scripts/deaprod_ows.sh"]
+    ports:
+      - 8000:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      datacube-index:
+        condition: service_completed_successfully
+  datacube-explorer:
+    image: opendatacube/explorer:2.12.4
+    ports:
+      - "8080:8080"
+    environment:
+      LOCAL_UID: ${LOCAL_UID:-1000}
+      LOCAL_GID: ${LOCAL_GID:-1000}
+      DATACUBE_ENVIRONMENT: default
+      DATACUBE_DB_URL: postgresql://sar:deaprod_sar_password@postgres:5432/deaprod
+      FLASK_ENV: development
+      FLASK_APP: cubedash
+      FLASK_DEBUG: 1
+      CUBEDASH_DEFAULT_TIMEZONE: Australia/Darwin
+    volumes:
+      - ./scripts/:/src/scripts
+    command: ["/bin/sh", "-c", "/src/scripts/deaprod_explorer.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      datacube-index:
+        condition: service_completed_successfully

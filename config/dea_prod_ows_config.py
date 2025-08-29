@@ -1,10 +1,8 @@
 from s1_cfg import s1_layer_group
 
-# from s2_cfg import s2_layer
-
 ows_cfg = {
     "global": {
-        "title": "Sample OGC WMS.",
+        "title": "DEA Prod-Like OWS.",
         "info_url": "http://localhost",
         "services": {"wms": True, "wcs": False, "wmts": False},
         "response_headers": {"Access-Control-Allow-Origin": "*"},
@@ -34,5 +32,5 @@ ows_cfg = {
         },
     },
     "wms": {"max_height": 512, "max_width": 512},
-    "layers": [s1_layer_group],  # , s2_layer],
+    "layers": [s1_layer_group],
 }
