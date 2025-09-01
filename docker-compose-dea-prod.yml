@@ -57,7 +57,7 @@ services:
     restart: always
     command: ["/bin/sh", "-c", "/src/scripts/deaprod_ows.sh"]
     ports:
-      - 8000:8000
+      - 8080:8080
     depends_on:
       postgres:
         condition: service_healthy
@@ -66,7 +66,7 @@ services:
   datacube-explorer:
     image: opendatacube/explorer:2.12.4
     ports:
-      - "8080:8080"
+      - "8000:8000"
     environment:
       LOCAL_UID: ${LOCAL_UID:-1000}
       LOCAL_GID: ${LOCAL_GID:-1000}

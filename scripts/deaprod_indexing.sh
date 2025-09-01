@@ -1,6 +1,6 @@
 datacube system init
 
-ADD required product metadata
+# ADD required product metadata
 datacube metadata add /src/dea-config/product_metadata/eo3_s1_ard.odc-type.yaml
 
 # S1 Test Data -- HH from Robinson Ridge
