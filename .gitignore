@@ -1,4 +1,9 @@
 **/.DS_Store
+**/__pycache__/
+**/build/
+**/*.egg-info/
 *.tif
 *.xml
-*.pyc
+*.pyc# pixi environments
+.pixi/*
+!.pixi/config.toml

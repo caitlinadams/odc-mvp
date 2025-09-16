@@ -1,0 +1,27 @@
+[project]
+name = "dataset_prepare_scripts"
+version = "0.1.0"
+description = "CLI tools for preparing Sentinel-1 datasets"
+authors = [
+    { name = "Caitlin Adams", email = "25995927+caitlinadams@users.noreply.github.com" }
+]
+dependencies = [
+    "click>=8.2.1,<9",
+    "boto3>=1.40.30,<2",
+    "mypy-boto3-s3>=1.40.26,<2"
+]
+requires-python = ">=3.13"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = [
+    "utils.aws_s3",
+    "utils.cli"
+]
+
+
+
+

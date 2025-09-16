@@ -1,0 +1,25 @@
+
+[workspace]
+name = "odc-mvp"
+version = "0.1.0"
+authors = ["Caitlin Adams <25995927+caitlinadams@users.noreply.github.com>"]
+channels = ["conda-forge"]
+platforms = ["osx-arm64"]
+
+[environments.default]
+features = ["pixi-build"]
+
+[feature.pixi-build]
+
+[dependencies]
+python = ">=3.13.7,<3.14"
+boto3 = ">=1.40.30,<2"
+click = ">=8.2.1,<9"
+
+[pypi-dependencies]
+dataset_prepare_scripts = { path = "dataset_prepare_scripts", editable = true }
+mypy-boto3-s3 = ">=1.40.26,<2"
+
+[tasks]
+copy-and-update-burst = "python -m dataset_prepare_scripts.utils.cli"
+
