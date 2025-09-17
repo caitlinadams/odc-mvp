@@ -15,11 +15,23 @@ features = ["pixi-build"]
 python = ">=3.13.7,<3.14"
 boto3 = ">=1.40.30,<2"
 click = ">=8.2.1,<9"
+datacube = "==1.8.19"
+ipykernel = ">=6.30.1,<7"
+odc-stac = ">=0.4.0,<0.5"
+odc-geo = ">=0.5.0rc1,<0.6"
 
 [pypi-dependencies]
 dataset_prepare_scripts = { path = "dataset_prepare_scripts", editable = true }
 mypy-boto3-s3 = ">=1.40.26,<2"
+pystac-client = ">=0.9.0, <0.10"
 
 [tasks]
 copy-and-update-burst = "python -m dataset_prepare_scripts.utils.cli"
-
+prod-db = "docker compose -f docker-compose-dea-prod.yml up postgres"
+prod-index = "docker compose -f docker-compose-dea-prod.yml up datacube-index"
+exec-prod-index = "docker compose -f docker-compose-dea-prod.yml exec datacube-index bash"
+prod-explorer = "docker compose -f docker-compose-dea-prod.yml up datacube-explorer"
+prod-ows = "docker compose -f docker-compose-dea-prod.yml up datacube-ows"
+compose-prod-down = "docker compose -f docker-compose-dea-prod.yml down -v"
+sync-s3-to-local = "aws s3 sync s3://deant-data-public-dev/experimental/local_production_environment_data/ /Users/caitlinadams/Documents/Work/GeoscienceAustralia/Repositories/deant-mvp/odc-mvp/data/local_production_environment_data/"
+sync-local-to-s3 = "aws s3 sync /Users/caitlinadams/Documents/Work/GeoscienceAustralia/Repositories/deant-mvp/odc-mvp/data/local_production_environment_data/ s3://deant-data-public-dev/experimental/local_production_environment_data/"
