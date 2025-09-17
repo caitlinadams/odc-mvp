@@ -1,8 +1,9 @@
-# • Explorer: 2.12.4 (Docker Hub)
-# • OWS: 1.8.42 (Docker Hub)
-# • datacube-core: 1.8.19 (library inside services)
-# • Postgres: 16.6
-#  odc-apps-dc-tools (indexing): datacube-index:0.2.1
+# Explorer: 2.12.4 (Docker Hub)
+# OWS: 1.8.42 (Docker Hub)
+# datacube-core: 1.8.19 (library inside services)
+# Postgres: 16.6
+# odc-apps-dc-tools (indexing): datacube-index:0.2.1 (odc-apps-dc-tools version 0.2.11)
+#     switched to datacube-index:0.4.4 to get odc-apps-dc-tools at version 1.9.4 (latest)
 
 services:
   postgres:
@@ -20,7 +21,7 @@ services:
       timeout: 45s
       retries: 10
   datacube-index:
-    image: opendatacube/datacube-index:0.2.1
+    image: opendatacube/datacube-index:0.4.4
     environment:
       DATACUBE_ENVIRONMENT: default
       DATACUBE_DB_URL: postgresql://sar:deaprod_sar_password@postgres:5432/deaprod
