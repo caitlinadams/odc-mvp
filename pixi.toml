@@ -24,6 +24,7 @@ odc-geo = ">=0.5.0rc1,<0.6"
 dataset_prepare_scripts = { path = "dataset_prepare_scripts", editable = true }
 mypy-boto3-s3 = ">=1.40.26,<2"
 pystac-client = ">=0.9.0, <0.10"
+datacube-ows = ">=1.8.43, <2"
 
 [tasks]
 copy-and-update-burst = "python -m dataset_prepare_scripts.utils.cli"
@@ -32,6 +33,7 @@ prod-index = "docker compose -f docker-compose-dea-prod.yml up datacube-index"
 exec-prod-index = "docker compose -f docker-compose-dea-prod.yml exec datacube-index bash"
 prod-explorer = "docker compose -f docker-compose-dea-prod.yml up datacube-explorer"
 prod-ows = "docker compose -f docker-compose-dea-prod.yml up datacube-ows"
-compose-prod-down = "docker compose -f docker-compose-dea-prod.yml down -v"
+prod-down = "docker compose -f docker-compose-dea-prod.yml down -v"
+prod-up = "docker compose -f docker-compose-dea-prod.yml up"
 sync-s3-to-local = "aws s3 sync s3://deant-data-public-dev/experimental/local_production_environment_data/ /Users/caitlinadams/Documents/Work/GeoscienceAustralia/Repositories/deant-mvp/odc-mvp/data/local_production_environment_data/"
 sync-local-to-s3 = "aws s3 sync /Users/caitlinadams/Documents/Work/GeoscienceAustralia/Repositories/deant-mvp/odc-mvp/data/local_production_environment_data/ s3://deant-data-public-dev/experimental/local_production_environment_data/"

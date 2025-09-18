@@ -50,7 +50,7 @@ services:
       AWS_NO_SIGN_REQUEST: yes
       PYTHONPATH: /src/config
       FLASK_APP: /usr/local/lib/python3.10/dist-packages/datacube_ows/ogc.py
-      DATACUBE_OWS_CFG: minimal_ows_config.ows_cfg
+      DATACUBE_OWS_CFG: dea_prod_ows_config.ows_cfg
       FLASK_ENV: ""
     volumes:
       - ./scripts:/src/scripts
