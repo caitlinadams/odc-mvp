@@ -37,3 +37,7 @@ prod-down = "docker compose -f docker-compose-dea-prod.yml down -v"
 prod-up = "docker compose -f docker-compose-dea-prod.yml up"
 sync-s3-to-local = "aws s3 sync s3://deant-data-public-dev/experimental/local_production_environment_data/ /Users/caitlinadams/Documents/Work/GeoscienceAustralia/Repositories/deant-mvp/odc-mvp/data/local_production_environment_data/"
 sync-local-to-s3 = "aws s3 sync /Users/caitlinadams/Documents/Work/GeoscienceAustralia/Repositories/deant-mvp/odc-mvp/data/local_production_environment_data/ s3://deant-data-public-dev/experimental/local_production_environment_data/"
+export-conda = """
+pixi workspace export conda-environment environment.yaml && \
+sed -ix "s/^name: default$/name: sar-pipeline/" environment.yaml; rm environment.yamlx
+"""
