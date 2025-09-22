@@ -3,30 +3,35 @@
 This repository contains docker compose files and accompanying scripts and notebooks to create a local instance of Digital Earth Australia's production or development Open Data Cube (ODC) environments.
 The purpose is to support simple testing of new products prior to integrating these fully into development or production.
 
-> **_NOTE:_** Production-like docker compose has been well-tested. Development-like docker compose is still under construction.
+All current settings for indexing and OWS are configured to work for GA's Sentinel-1 product, which is in development.
+However, you can customise the scripts and configuration to work for any test product.
+
+> **_NOTE:_** Production-like docker compose has been well-tested. Development-like docker compose is still under construction and may not yet perfectly replicate DEA's development environment.
 
 ## Set up
 
 1. Ensure you have `docker` and `docker-compose` installed
 1. Clone this repository
-1. Set up a Python virtual environment
+1. Set up a Python virtual environment (only required to run notebooks)
     * Option 1: use `conda` to install the appropriate `environment.yaml` file
     * Option 2: use `pixi` to install the project (provides access to additional functionality)
 
 ## Simple launch with docker-compose
+
 There are two docker compose files:
 * Production-like environment: [docker-compose-dea-prod.yml](docker-compose-dea-prod.yml)
 * Development-like environment: [docker-compose-dea-dev.yml](docker-compose-dea-dev.yml)
 
 Each environment contains:
-* A postgres+postgis database
+* A service with the postgres+postgis database
 * A service for indexing data
 * A service for OWS
 * A service for Explorer
 
-If indexing from AWS, you may need to log into AWS on your command line.
+If loading data from AWS when running notebooks, you may need to log into AWS on your command line.
 
 ### Launch the production-like environment
+
 run `docker compose -f docker-compose-dea-prod.yml up` to start all services.
 Alternatively, if using [pixi](https://pixi.sh/latest/) you can run `pixi run prod-up`.
 
@@ -37,6 +42,7 @@ Versions of services are as follows:
 * Explorer: [opendatacube/explorer:2.12.4](https://hub.docker.com/layers/opendatacube/explorer/2.12.4/images/sha256-ff1885b7e7936d7af38d2468f314f580fa1dd21d50f31b02608987b932894f53)
 
 ### Launch the development-like environment
+
 > **_NOTE:_** UNDER CONSTRUCTION
 run `docker compose -f docker-compose-dea-dev.yml up` to start all services.
 Alternatively, if using [pixi](https://pixi.sh/latest/) you can run `pixi run dev-up`.
@@ -47,6 +53,7 @@ Alternatively, if using [pixi](https://pixi.sh/latest/) you can run `pixi run de
 * Explorer: [opendatacube/explorer:3.0.1](https://hub.docker.com/layers/opendatacube/explorer/3.0.1/images/sha256-604cdb5aee26c258a79a8d46ad9cd261c01b011ab6bd581bf052c1ccf99d70da)
 
 ### Ports
+
 Port mapping specified as follows:
 * Database: 5432:5432
 * OWS: 8080:8080 (http://localhost:8080/?service=wms&request=getcapabilities)
@@ -58,6 +65,55 @@ Alternatively, if using [pixi](https://pixi.sh/latest/) you can run `pixi run pr
 
 ## Customising indexing and OWS
 
-The dataube-index, datacube-ows, and datacube-explorer services all have an associated shell script that is called as their command on launch. 
+The dataube-index, datacube-ows, and datacube-explorer services all have an associated shell script that is called as their command on launch.
 
 ### Indexing script
+
+This script conducts the following steps:
+1. Initialises the datacube
+1. Adds a metadata defintion (using a raw URL from dea-config repository)
+1. Adds the product definition (using a raw URL from dea-config repository)
+1. Indexes a dataset using `s3-to-dc` from the `odc-apps-dc-tools` package
+
+Optionally, you can then comment/uncomment the `sleep infinity` command if you wish to keep the indexing service running after initial indexing is complete.
+This can be useful for debugging.
+
+* [scripts/dea_prod_indexing.sh](scripts/dea_prod_indexing.sh)
+* [scripts/dea_dev_indexing.sh](scripts/dea_dev_indexing.sh)
+
+### OWS Config
+
+OWS configuration is managed in the [config](config) directory.
+The service configuration is largely boiler-plate and is handled in 
+* [config/dea_prod_ows_config.py](config/dea_prod_ows_config.py)
+* [config/dea_dev_ows_config.py](config/dea_dev_ows_config.py)
+
+These may import settings from other Python modules. The key modules developed for the Sentinel-1 Backscatter example are:
+* [config/general_cfg.py](config/general_cfg.py)
+* [config/s1_cfg.py](config/s1_cfg.py)
+* [config/s1_styles.py](config/s1_styles.py)
+
+## Notebooks
+
+There are three notebooks that can be used to test loading and visualisation:
+
+* [notebooks/datacube_loading.ipynb](notebooks/datacube_loading.ipynb)
+* [notebooks/stac_loading.ipynb](notebooks/stac_loading.ipynb)
+* [notebooks/ows_styling.ipynb](notebooks/ows_styling.ipynb)
+
+Note that the `postgres` service must be running for all notebooks, and the `datacube-explorer` service must be running for the STAC loading notebook.
+
+## Pixi commands
+
+The [pixi.toml](pixi.toml) file provides a number of useful commands if using [pixi](https://pixi.sh/latest/).
+Each command must be prefaced with `pixi run` to execute.
+
+| Task | Production | Development | 
+|----|----|----|
+| Start all services | `prod-up` | `dev-up` |
+| Shut down all services | `prod-down` | `dev-down` |
+| Start the postgres database service | `prod-db` | `dev-db` |
+| Start the datacube-index service | `prod-index` | `dev-index` |
+| Exec into the running datacube-index service | `prod-index-exec` | `dev-index-exec` |
+| Start the datacube-explorer service | `prod-explorer` | `dev-explorer` |
+| Start the datacube-ows service | `prod-ows` | `dev-ows` |
