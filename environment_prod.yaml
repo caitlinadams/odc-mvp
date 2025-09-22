@@ -1,4 +1,4 @@
-name: sar-pipeline
+name: odc-mvp
 channels:
 - conda-forge
 - nodefaults

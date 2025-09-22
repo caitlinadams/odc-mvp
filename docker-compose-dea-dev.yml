@@ -1,19 +1,17 @@
 # All images from Docker Hub. See README for more detail
 # Postgres + PostGIS: postgis/postgis:16-3.4
-# Indexing:  
-#    production: opendatacube/datacube-index:0.2.1 (odc-apps-dc-tools version 0.2.11)
-#    alternate: opendatacube/datacube-index:0.4.4 (odc-apps-dc-tools version 1.9.4)
-# OWS: opendatacube/ows:1.8.42
-# Explorer: 2.12.4
+# Indexing: opendatacube/datacube-index:latest
+# OWS: opendatacube/ows:latest
+# Explorer: opendatacube/explorer:3.0.1
 
 services:
   postgres:
     image: postgis/postgis:16-3.4
     restart: always
     environment:
-      POSTGRES_DB: deaprod
-      POSTGRES_USER: production
-      POSTGRES_PASSWORD: deaprod_password
+      POSTGRES_DB: deadev
+      POSTGRES_USER: development
+      POSTGRES_PASSWORD: deadev_password
     ports:
       - "5432:5432"
     healthcheck:
@@ -24,13 +22,14 @@ services:
   datacube-index:
     image: opendatacube/datacube-index:0.4.4
     environment:
-      DATACUBE_ENVIRONMENT: default
-      DATACUBE_DB_URL: postgresql://production:deaprod_password@postgres:5432/deaprod
+      ODC_ENVIRONMENT: default
+      ODC_DEFAULT_INDEX_DRIVER: postgis
+      ODC_DEFAULT_DB_URL: postgresql://development:deadev_password@postgres:5432/deadev
       AWS_DEFAULT_REGION: ap-southeast-2
       AWS_NO_SIGN_REQUEST: yes
     volumes:
       - ./scripts/:/src/scripts
-    command: ["/bin/sh", "-c", "/src/scripts/dea_prod_indexing.sh"]
+    command: ["/bin/sh", "-c", "/src/scripts/dea_dev_indexing.sh"]
     healthcheck:
       test: ["CMD", "datacube", "system", "check"]
       interval: 10s
@@ -40,23 +39,24 @@ services:
       postgres:
         condition: service_healthy
   datacube-ows:
-    image: opendatacube/ows:1.8.42
+    image: opendatacube/ows:latest
     environment:
       LOCAL_UID: ${LOCAL_UID:-1000}
       LOCAL_GID: ${LOCAL_GID:-1000}
-      DATACUBE_ENVIRONMENT: default
-      DATACUBE_DB_URL: postgresql://sar:deaprod_sar_password@postgres:5432/deaprod
+      ODC_ENVIRONMENT: default
+      ODC_DEFAULT_INDEX_DRIVER: postgis
+      ODC_DEFAULT_DB_URL: postgresql://development:deadev_password@postgres:5432/deadev
       AWS_DEFAULT_REGION: ap-southeast-2
       AWS_NO_SIGN_REQUEST: yes
       PYTHONPATH: /src/config
-      FLASK_APP: /usr/local/lib/python3.10/dist-packages/datacube_ows/ogc.py
-      DATACUBE_OWS_CFG: dea_prod_ows_config.ows_cfg
+      DATACUBE_OWS_CFG: minimal_ows_config.ows_cfg
+      FLASK_APP: /usr/local/lib/python3.12/dist-packages/datacube_ows/ogc.py
       FLASK_ENV: ""
     volumes:
       - ./scripts:/src/scripts
       - ./config:/src/config
     restart: always
-    command: ["/bin/sh", "-c", "/src/scripts/dea_prod_ows.sh"]
+    command: ["/bin/sh", "-c", "/src/scripts/dea_dev_ows.sh"]
     ports:
       - 8080:8080
     depends_on:
@@ -65,21 +65,24 @@ services:
       datacube-index:
         condition: service_completed_successfully
   datacube-explorer:
-    image: opendatacube/explorer:2.12.4
+    image: opendatacube/explorer:3.0.1
     ports:
       - "8000:8000"
     environment:
       LOCAL_UID: ${LOCAL_UID:-1000}
       LOCAL_GID: ${LOCAL_GID:-1000}
-      DATACUBE_ENVIRONMENT: default
-      DATACUBE_DB_URL: postgresql://sar:deaprod_sar_password@postgres:5432/deaprod
+      ODC_ENVIRONMENT: default
+      ODC_DEFAULT_INDEX_DRIVER: postgis
+      ODC_DEFAULT_DB_URL: postgresql://development:deadev_password@postgres:5432/deadev
+      AWS_DEFAULT_REGION: ap-southeast-2
+      AWS_NO_SIGN_REQUEST: yes
       FLASK_ENV: development
       FLASK_APP: cubedash
       FLASK_DEBUG: 1
       CUBEDASH_DEFAULT_TIMEZONE: Australia/Darwin
     volumes:
       - ./scripts/:/src/scripts
-    command: ["/bin/sh", "-c", "/src/scripts/dea_prod_explorer.sh"]
+    command: ["/bin/sh", "-c", "/src/scripts/dea_dev_explorer.sh"]
     depends_on:
       postgres:
         condition: service_healthy

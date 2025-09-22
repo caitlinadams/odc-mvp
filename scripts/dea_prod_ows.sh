@@ -1,4 +1,4 @@
-datacube-ows-update --schema --role sar --views
+datacube-ows-update --schema --role production --views
 
 datacube-ows-update
 
