@@ -1,6 +1,6 @@
 # All images from Docker Hub. See README for more detail
 # Postgres + PostGIS: postgis/postgis:16-3.4
-# Indexing:  
+# Indexing:
 #    production: opendatacube/datacube-index:0.2.1 (odc-apps-dc-tools version 0.2.11)
 #    alternate: opendatacube/datacube-index:0.4.4 (odc-apps-dc-tools version 1.9.4)
 # OWS: opendatacube/ows:1.8.42
@@ -17,7 +17,18 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-h", "postgres", "-q", "-d", "$POSTGRES_DB", "-U", "$POSTGRES_USER"]
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-h",
+          "postgres",
+          "-q",
+          "-d",
+          "$POSTGRES_DB",
+          "-U",
+          "$POSTGRES_USER",
+        ]
       interval: 10s
       timeout: 45s
       retries: 10
@@ -45,7 +56,7 @@ services:
       LOCAL_UID: ${LOCAL_UID:-1000}
       LOCAL_GID: ${LOCAL_GID:-1000}
       DATACUBE_ENVIRONMENT: default
-      DATACUBE_DB_URL: postgresql://sar:deaprod_sar_password@postgres:5432/deaprod
+      DATACUBE_DB_URL: postgresql://production:deaprod_password@postgres:5432/deaprod
       AWS_DEFAULT_REGION: ap-southeast-2
       AWS_NO_SIGN_REQUEST: yes
       PYTHONPATH: /src/config
@@ -72,7 +83,7 @@ services:
       LOCAL_UID: ${LOCAL_UID:-1000}
       LOCAL_GID: ${LOCAL_GID:-1000}
       DATACUBE_ENVIRONMENT: default
-      DATACUBE_DB_URL: postgresql://sar:deaprod_sar_password@postgres:5432/deaprod
+      DATACUBE_DB_URL: postgresql://production:deaprod_password@postgres:5432/deaprod
       FLASK_ENV: development
       FLASK_APP: cubedash
       FLASK_DEBUG: 1
