@@ -1,5 +1,17 @@
 from general_cfg import resource_limits, image_processing
-from s1_styles import VV, VH, HH, HV, mask
+from s1_styles import (
+    vv_linear,
+    vv_db,
+    vh_linear,
+    vh_db,
+    hh_linear,
+    hh_db,
+    hv_linear,
+    hv_db,
+    vv_vh_false_colour_linear,
+    mask,
+)
+
 
 vv_0_layer = {
     "name": "ga_s1_nrb_iw_vv_0",
@@ -15,8 +27,8 @@ vv_0_layer = {
     "resource_limits": resource_limits,
     "image_processing": image_processing,
     "styling": {
-        "default_style": "VV",
-        "styles": [VV, mask],
+        "default_style": "vv_linear",
+        "styles": [vv_linear, vv_db, mask],
     },
 }
 
@@ -35,8 +47,8 @@ vv_vh_0_layer = {
     "resource_limits": resource_limits,
     "image_processing": image_processing,
     "styling": {
-        "default_style": "VV",
-        "styles": [VV, VH, mask],
+        "default_style": "vv_vh_false_colour_linear",
+        "styles": [vv_vh_false_colour_linear, vv_linear, vh_linear, vv_db, vh_db, mask],
     },
 }
 
@@ -54,8 +66,8 @@ hh_0_layer = {
     "resource_limits": resource_limits,
     "image_processing": image_processing,
     "styling": {
-        "default_style": "HH",
-        "styles": [HH, mask],
+        "default_style": "hh_linear",
+        "styles": [hh_linear, hh_db, mask],
     },
 }
 
@@ -74,8 +86,8 @@ hh_hv_0_layer = {
     "resource_limits": resource_limits,
     "image_processing": image_processing,
     "styling": {
-        "default_style": "HH",
-        "styles": [HH, HV, mask],
+        "default_style": "hh_linear",
+        "styles": [hh_linear, hv_linear, hh_db, hv_db, mask],
     },
 }
 
