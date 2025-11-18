@@ -13,16 +13,16 @@ from s1_styles import (
 )
 
 
-vv_0_layer = {
-    "name": "ga_s1_nrb_iw_vv_0",
+vv_1_layer = {
+    "name": "ga_s1_nrb_iw_vv_1",
     "title": "Sentinel-1 NRB IW (VV)",
     "abstract": "Experimental Sentinel-1 backscatter data (VV)",
-    "product_name": "ga_s1_nrb_iw_vv_0",
+    "product_name": "ga_s1_nrb_iw_vv_1",
     "native_crs": "EPSG:3577",
     "native_resolution": [20, -20],
     "bands": {
-        "VV_gamma0": ["VV_gamma0"],
-        "mask": ["mask"],
+        "vv_gamma0": ["vv_gamma0"],
+        "mask": ["oa_layover_shadow_mask"],
     },
     "resource_limits": resource_limits,
     "image_processing": image_processing,
@@ -32,17 +32,17 @@ vv_0_layer = {
     },
 }
 
-vv_vh_0_layer = {
-    "name": "ga_s1_nrb_iw_vv_vh_0",
+vv_vh_1_layer = {
+    "name": "ga_s1_nrb_iw_vv_vh_1",
     "title": "Sentinel-1 NRB IW (VV+VH)",
     "abstract": "Experimental Sentinel-1 backscatter data (VV+VH)",
-    "product_name": "ga_s1_nrb_iw_vv_vh_0",
+    "product_name": "ga_s1_nrb_iw_vv_vh_1",
     "native_crs": "EPSG:3577",
     "native_resolution": [20, -20],
     "bands": {
-        "VV_gamma0": ["VV_gamma0"],
-        "VH_gamma0": ["VH_gamma0"],
-        "mask": ["mask"],
+        "vv_gamma0": ["vv_gamma0"],
+        "vh_gamma0": ["vh_gamma0"],
+        "mask": ["oa_layover_shadow_mask"],
     },
     "resource_limits": resource_limits,
     "image_processing": image_processing,
@@ -52,16 +52,16 @@ vv_vh_0_layer = {
     },
 }
 
-hh_0_layer = {
-    "name": "ga_s1_nrb_iw_hh_0",
+hh_1_layer = {
+    "name": "ga_s1_nrb_iw_hh_1",
     "title": "Sentinel-1 NRB IW (HH)",
     "abstract": "Experimental Sentinel-1 backscatter data (HH)",
-    "product_name": "ga_s1_nrb_iw_hh_0",
+    "product_name": "ga_s1_nrb_iw_hh_1",
     "native_crs": "EPSG:3031",
     "native_resolution": [20, -20],
     "bands": {
-        "HH_gamma0": ["HH_gamma0"],
-        "mask": ["mask"],
+        "hh_gamma0": ["hh_gamma0"],
+        "mask": ["oa_layover_shadow_mask"],
     },
     "resource_limits": resource_limits,
     "image_processing": image_processing,
@@ -71,17 +71,17 @@ hh_0_layer = {
     },
 }
 
-hh_hv_0_layer = {
-    "name": "ga_s1_nrb_iw_hh_hv_0",
+hh_hv_1_layer = {
+    "name": "ga_s1_nrb_iw_hh_hv_1",
     "title": "Sentinel-1 NRB IW (HH+HV)",
     "abstract": "Experimental Sentinel-1 backscatter data (HH+HV)",
-    "product_name": "ga_s1_nrb_iw_hh_hv_0",
+    "product_name": "ga_s1_nrb_iw_hh_hv_1",
     "native_crs": "EPSG:3577",
     "native_resolution": [20, -20],
     "bands": {
-        "HH_gamma0": ["HH_gamma0"],
-        "HV_gamma0": ["HV_gamma0"],
-        "mask": ["mask"],
+        "hh_gamma0": ["hh_gamma0"],
+        "hv_gamma0": ["hv_gamma0"],
+        "mask": ["oa_layover_shadow_mask"],
     },
     "resource_limits": resource_limits,
     "image_processing": image_processing,
@@ -94,5 +94,5 @@ hh_hv_0_layer = {
 s1_layer_group = {
     "title": "Antarctic and Australian S1 NRB",
     "abstract": "Sentinel-1 Radar Backscatter products for Antarctica and Australia",
-    "layers": [vv_vh_0_layer, vv_0_layer, hh_0_layer, hh_hv_0_layer],
+    "layers": [vv_vh_1_layer, hh_1_layer],
 }
